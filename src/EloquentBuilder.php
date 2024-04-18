@@ -99,6 +99,10 @@ class EloquentBuilder
         foreach ($fields as $field) {
             $fieldStructure = $this->alchemistRestfulApi->fieldSelector()->getFieldStructure("$rootNamespace.{$field->getName()}");
 
+            if (! $fieldStructure) {
+                continue;
+            }
+
             if ($fieldStructure['type'] === 'atomic') {
                 $this->subject->addSelect($field->getName());
             }
