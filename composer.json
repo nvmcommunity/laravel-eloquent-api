@@ -7,6 +7,8 @@
         "nvmcommunity/alchemist-restful-api": "^2",
         "illuminate/database": "^10.0|^11.0"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "license": "MIT",
     "autoload": {
         "psr-4": {
