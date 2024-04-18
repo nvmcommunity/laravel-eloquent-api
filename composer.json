@@ -1,10 +1,25 @@
 {
     "name": "nvmcommunity/laravel-eloquent-api",
     "description": "Easily build Eloquent queries from API requests using Alchemist Restful API.",
+    "keywords": [
+        "laravel-query-builder",
+        "eloquent-api",
+        "laravel-api",
+        "laravel",
+        "api",
+        "json",
+        "rest",
+        "restful",
+        "rest-api",
+        "restful-api",
+        "service-discovery",
+        "nvmcommunity.io",
+        "Người-Viết-Mã"
+    ],
     "type": "library",
     "require": {
         "php": "^8.1",
-        "nvmcommunity/alchemist-restful-api": "^2",
+        "nvmcommunity/alchemist-restful-api": "^2.0",
         "illuminate/database": "^10.0|^11.0"
     },
     "minimum-stability": "dev",
