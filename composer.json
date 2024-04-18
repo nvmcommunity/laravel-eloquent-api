@@ -1,0 +1,22 @@
+{
+    "name": "nvmcommunity/laravel-eloquent-api",
+    "description": "Easily build Eloquent queries from API requests using Alchemist Restful API.",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "nvmcommunity/alchemist-restful-api": "^2",
+        "illuminate/database": "^10.0|^11.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nvmcommunity\\EloquentApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "NVM Community (Người Viết Mã)",
+            "email": "nvmcommunity.io@gmail.com"
+        }
+    ]
+}
