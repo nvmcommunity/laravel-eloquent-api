@@ -22,23 +22,33 @@ class EloquentBuilder
      */
     public function __construct(protected AlchemistRestfulApi $alchemistRestfulApi, protected Builder $subject)
     {
-        if ($alchemistRestfulApi->isComponentUses(FieldSelector::class)) {
+        if ($alchemistRestfulApi->isComponentUses(FieldSelector::class)
+            && $alchemistRestfulApi->fieldSelector()->validate()->passes()
+        ) {
             $this->handleFieldSelector();
         }
 
-        if ($alchemistRestfulApi->isComponentUses(ResourceFilter::class)) {
+        if ($alchemistRestfulApi->isComponentUses(ResourceFilter::class)
+            && $alchemistRestfulApi->resourceFilter()->validate()->passes()
+        ) {
             $this->handleResourceFilter();
         }
 
-        if ($alchemistRestfulApi->isComponentUses(ResourceOffsetPaginator::class)) {
+        if ($alchemistRestfulApi->isComponentUses(ResourceOffsetPaginator::class)
+            && $alchemistRestfulApi->resourceOffsetPaginator()->validate()->passes()
+        ) {
             $this->handleOffsetPaginator();
         }
 
-        if ($alchemistRestfulApi->isComponentUses(ResourceSort::class)) {
+        if ($alchemistRestfulApi->isComponentUses(ResourceSort::class)
+            && $alchemistRestfulApi->resourceSort()->validate()->passes()
+        ) {
             $this->handleResourceSort();
         }
 
-        if ($alchemistRestfulApi->isComponentUses(ResourceSearch::class)) {
+        if ($alchemistRestfulApi->isComponentUses(ResourceSearch::class)
+            && $alchemistRestfulApi->resourceSearch()->validate()->passes()
+        ) {
             $this->handleResourceSearch();
         }
     }
