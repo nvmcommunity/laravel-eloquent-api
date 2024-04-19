@@ -1,8 +1,16 @@
 # Laravel Eloquent API
 
+Easily build Eloquent queries from API requests using Alchemist Restful API.
+
 ## Description
 
-Easily build Eloquent queries from API requests using Alchemist Restful API.
+This is a package that helps you integrate Alchemist Restful API with Laravel Eloquent. for more information about concepts and usage of Alchemist Restful API, please refer to the [Alchemist Restful API documentation](https://github.com/nvmcommunity/alchemist-restful-api)
+
+## Installation
+
+```bash
+composer require alchemist-interactive/laravel-eloquent-api
+```
 
 ## Basic usage
 
@@ -75,22 +83,30 @@ Make sure to validate the input parameters passed in from the request input by u
 ```php
 
 // Assuming that the input parameters are passed in from the request input
+// In Laravel, you can get the input parameters by calling the `input` method on the request object or using the `request` helper function
 $input = [
     'fields' => 'name,email',
     'filtering' => [
         'name:contains' => "John"
     ],
 ];
-
+// Apply aspects defined in the UserApiQuery class to build the query for the User model from the input parameters
 $eloquentBuilder = EloquentBuilder::for(User::class, UserApiQuery::class, $input);
 
+// Validate the input parameters
 if (! $eloquentBuilder->validate($e)->passes()) {
     var_dump(json_encode($e->getErrors())); die();
 }
 ```
 
-### Step 3: Get the result
+### Step 3: Done! Get the Eloquent query builder and execute the query
+
+After validating the input parameters, you can get the Eloquent query builder by calling the `getBuilder` method. This method will return an instance of `Illuminate\Database\Eloquent\Builder` that already have the query constraints applied based on the input parameters.
 
 ```php
 var_dump($eloquentBuilder->getBuilder()->toSql());
 ```
+
+## License
+
+This package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
