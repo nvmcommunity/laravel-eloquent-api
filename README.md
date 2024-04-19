@@ -9,7 +9,7 @@ This is a package that helps you integrate Alchemist Restful API with Laravel El
 ## Installation
 
 ```bash
-composer require alchemist-interactive/laravel-eloquent-api
+composer require nvmcommunity/laravel-eloquent-api
 ```
 
 ## Basic usage
