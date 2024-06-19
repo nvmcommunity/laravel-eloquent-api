@@ -17,6 +17,16 @@ composer require nvmcommunity/laravel-eloquent-api
 ### Step 1: Define the API class
 
 ```php
+
+use Nvmcommunity\Alchemist\RestfulApi\Common\Exceptions\AlchemistRestfulApiException;
+use Nvmcommunity\Alchemist\RestfulApi\Common\Integrations\AlchemistQueryable;
+use Nvmcommunity\Alchemist\RestfulApi\FieldSelector\Handlers\FieldSelector;
+use Nvmcommunity\Alchemist\RestfulApi\ResourceFilter\Handlers\ResourceFilter;
+use Nvmcommunity\Alchemist\RestfulApi\ResourceFilter\Objects\FilteringRules;
+use Nvmcommunity\Alchemist\RestfulApi\ResourcePaginations\OffsetPaginator\Handlers\ResourceOffsetPaginator;
+use Nvmcommunity\Alchemist\RestfulApi\ResourceSearch\Handlers\ResourceSearch;
+use Nvmcommunity\Alchemist\RestfulApi\ResourceSort\Handlers\ResourceSort;
+
 class UserApiQuery extends AlchemistQueryable
 {
     /**
@@ -26,7 +36,7 @@ class UserApiQuery extends AlchemistQueryable
     public static function fieldSelector(FieldSelector $fieldSelector): void
     {
         $fieldSelector->defineFieldStructure([
-            'id', 'name', 'email'
+            'id', 'name', 'email', 'created_at'
         ])
         ->defineDefaultFields(['id']);
     }
@@ -41,6 +51,7 @@ class UserApiQuery extends AlchemistQueryable
             FilteringRules::String('id', ['eq']),
             FilteringRules::String('name', ['eq', 'contains']),
             FilteringRules::String('email', ['eq', 'contains']),
+            FilteringRules::Datetime('created_at', ['eq', 'gte', 'lte', 'between']),
         ]);
     }
 
@@ -76,37 +87,52 @@ class UserApiQuery extends AlchemistQueryable
     }
 }
 ```
-### Step 2: Validate the input parameters
+### Step 2: Validate & respond to the request
 
-Make sure to validate the input parameters passed in from the request input by using the `validate` method.
+Make sure to validate the input parameters passed in from the request input by using the `$eloquentBuilder->validate()` method before executing the query and responding to the request.
 
 ```php
 
-// Assuming that the input parameters are passed in from the request input
-// In Laravel, you can get the input parameters by calling the `input` method on the request object or using the `request` helper function
-$input = [
-    'fields' => 'name,email',
-    'filtering' => [
-        'name:contains' => "John"
-    ],
-];
-// Apply aspects defined in the UserApiQuery class to build the query for the User model from the input parameters
-$eloquentBuilder = EloquentBuilder::for(User::class, UserApiQuery::class, $input);
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Nvmcommunity\Alchemist\RestfulApi\Common\Exceptions\AlchemistRestfulApiException;
+use Nvmcommunity\EloquentApi\EloquentBuilder;
 
-// Validate the input parameters
-if (! $eloquentBuilder->validate($e)->passes()) {
-    var_dump(json_encode($e->getErrors())); die();
+class UserController extends Controller
+{
+    /**
+     * @param Request $request
+     * @param JsonResponse $response
+     * @return JsonResponse
+     * @throws AlchemistRestfulApiException
+     */
+    public function index(Request $request, JsonResponse $response): JsonResponse
+    {
+        $eloquentBuilder = EloquentBuilder::for(User::class, UserApiQuery::class, $request->input());
+
+        // Validate the input parameters
+        if (! $eloquentBuilder->validate($e)->passes()) {
+            return $response->setData($e->getErrors())->setStatusCode(400);
+        }
+
+        // It's safe to execute the query now.
+        // Return the result as JSON
+        return $response->setData($eloquentBuilder->getBuilder()->get());
+    }
 }
 ```
 
-### Step 3: Done! Get the Eloquent query builder and execute the query
+## Contributors
 
-After validating the input parameters, you can get the Eloquent query builder by calling the `getBuilder` method. This method will return an instance of `Illuminate\Database\Eloquent\Builder` that already have the query constraints applied based on the input parameters.
+### Code Contributors
 
-```php
-var_dump($eloquentBuilder->getBuilder()->toSql());
-```
+This project exists thanks to all the people who contribute.
+
+<a href="https://github.com/nvmcommunity/laravel-eloquent-api/graphs/contributors">
+<img src = "https://contrib.rocks/image?repo=nvmcommunity/laravel-eloquent-api"/>
+</a>
 
 ## License
 
-This package is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This Project is [MIT](./LICENSE) Licensed
